@@ -8,6 +8,7 @@ The pipeline is designed to be modular and robust, handling data loading, cleani
 
 ### Key Features
 
+*   **Automated Data Loading**: Automatically downloads the dataset from Kaggle if not found locally.
 *   **Data Cleaning**: Handles missing values, renames columns for consistency, and filters out invalid data (e.g., negative ages).
 *   **Feature Engineering**: Extracts meaningful features from date columns (e.g., day of the week, month) and calculates the waiting time between scheduling and the appointment.
 *   **Visualization**: Generates exploratory data analysis (EDA) plots to visualize relationships between features and the target variable (saved as PNG files).
@@ -18,12 +19,13 @@ The pipeline is designed to be modular and robust, handling data loading, cleani
     *   Random Forest
     *   K-Nearest Neighbors (KNN)
     *   Naive Bayes
-*   **Evaluation**: detailed classification reports and confusion matrices for each model.
+*   **Evaluation**: Detailed classification reports and confusion matrices for each model.
 
 ## Prerequisites
 
 *   Python 3.x
 *   pip
+*   Kaggle API credentials
 
 ## Installation
 
@@ -38,22 +40,26 @@ The pipeline is designed to be modular and robust, handling data loading, cleani
     pip install -r requirements.txt
     ```
 
+3.  **Set up Kaggle API Credentials**:
+    To automatically download the dataset, you need a `kaggle.json` file.
+    *   Go to your [Kaggle Account Settings](https://www.kaggle.com/settings).
+    *   Scroll to the "API" section and click "Create New Token".
+    *   Move the downloaded `kaggle.json` file to `~/.kaggle/`:
+        ```bash
+        mkdir -p ~/.kaggle
+        mv ~/Downloads/kaggle.json ~/.kaggle/
+        chmod 600 ~/.kaggle/kaggle.json
+        ```
+
 ## Usage
 
 The project includes a command-line interface (CLI) for easy execution.
 
 ### Basic Run
-To run the pipeline with the default dataset (`KaggleV2-May-2016.csv`):
+To run the pipeline. If the dataset is missing, it will attempt to download it from Kaggle:
 
 ```bash
 python main.py
-```
-
-### Specify Dataset File
-To specify a different dataset file:
-
-```bash
-python main.py --file path/to/your/dataset.csv
 ```
 
 ### Enable Visualization
@@ -63,20 +69,35 @@ To generate and save visualization plots during the run:
 python main.py --visualize
 ```
 
-### Combined Example
+### Specify Dataset File or URL
+To specify a different local file or a different Kaggle dataset URL:
+
 ```bash
-python main.py --file data/appointments.csv --visualize
+python main.py --file my_data.csv --url username/dataset-slug
 ```
 
 ## Project Structure
 
-*   `main.py`: The main script containing the `NoShowPredictionPipeline` class and execution logic.
+The project follows a modular architecture:
+
+*   `main.py`: The entry point script that orchestrates the pipeline.
+*   `src/`: Source code directory.
+    *   `data_loader.py`: Handles loading and downloading data from Kaggle.
+    *   `data_cleaner.py`: Performs data cleaning and column renaming.
+    *   `feature_engineer.py`: Creates new features from existing data.
+    *   `visualizer.py`: Generates and saves EDA plots.
+    *   `preprocessor.py`: Handles encoding, scaling, and train-test splitting.
+    *   `model_trainer.py`: Trains and evaluates machine learning models.
 *   `requirements.txt`: List of Python dependencies.
 *   `README.md`: Project documentation.
 
 ## Dataset
 
-The project expects a CSV dataset with columns similar to the Kaggle "Medical Appointment No Shows" dataset, including:
+The project uses the **Medical Appointment No Shows** dataset from Kaggle.
+
+**Default URL:** [https://www.kaggle.com/datasets/joniarroba/noshowappointments](https://www.kaggle.com/datasets/joniarroba/noshowappointments)
+
+The dataset contains the following columns:
 *   `PatientId`
 *   `AppointmentID`
 *   `Gender`
