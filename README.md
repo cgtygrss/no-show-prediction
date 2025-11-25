@@ -4,14 +4,14 @@ This project implements a machine learning pipeline to predict whether a patient
 
 ## Project Overview
 
-The pipeline is designed to be modular and robust, handling data loading, cleaning, feature engineering, visualization, preprocessing, model training, and evaluation.
+The pipeline is designed to be modular and robust, handling data loading, cleaning, feature engineering, visualization, preprocessing, model training, and evaluation. All results and visualizations are automatically saved to an `outputs/` directory.
 
 ### Key Features
 
 *   **Automated Data Loading**: Automatically downloads the dataset from Kaggle if not found locally.
 *   **Data Cleaning**: Handles missing values, renames columns for consistency, and filters out invalid data (e.g., negative ages).
 *   **Feature Engineering**: Extracts meaningful features from date columns (e.g., day of the week, month) and calculates the waiting time between scheduling and the appointment.
-*   **Visualization**: Generates exploratory data analysis (EDA) plots to visualize relationships between features and the target variable (saved as PNG files).
+*   **Visualization**: Generates exploratory data analysis (EDA) plots to visualize relationships between features and the target variable. **Plots are saved as PNG files in the `outputs/` folder.**
 *   **Preprocessing**: Performs binary encoding for gender and target variables, one-hot encoding for categorical features, and standard scaling for numerical features.
 *   **Model Training**: Trains multiple machine learning models to compare performance:
     *   Decision Tree
@@ -19,13 +19,13 @@ The pipeline is designed to be modular and robust, handling data loading, cleani
     *   Random Forest
     *   K-Nearest Neighbors (KNN)
     *   Naive Bayes
-*   **Evaluation**: Detailed classification reports and confusion matrices for each model.
+*   **Evaluation**: Detailed classification reports and confusion matrices for each model are **saved to `outputs/model_results.txt`**.
 
 ## Prerequisites
 
 *   Python 3.x
 *   pip
-*   Kaggle API credentials
+*   Kaggle API credentials (for automatic dataset downloading)
 
 ## Installation
 
@@ -76,6 +76,11 @@ To specify a different local file or a different Kaggle dataset URL:
 python main.py --file my_data.csv --url username/dataset-slug
 ```
 
+### Output
+After running the pipeline, check the `outputs/` directory for:
+*   **Visualizations**: PNG files showing feature distributions (e.g., `Gender_vs_NoShow.png`).
+*   **Model Results**: A text file (`model_results.txt`) containing classification reports and confusion matrices for all trained models.
+
 ## Project Structure
 
 The project follows a modular architecture:
@@ -85,9 +90,10 @@ The project follows a modular architecture:
     *   `data_loader.py`: Handles loading and downloading data from Kaggle.
     *   `data_cleaner.py`: Performs data cleaning and column renaming.
     *   `feature_engineer.py`: Creates new features from existing data.
-    *   `visualizer.py`: Generates and saves EDA plots.
+    *   `visualizer.py`: Generates and saves EDA plots to the output directory.
     *   `preprocessor.py`: Handles encoding, scaling, and train-test splitting.
-    *   `model_trainer.py`: Trains and evaluates machine learning models.
+    *   `model_trainer.py`: Trains and evaluates machine learning models, saving results to file.
+*   `outputs/`: Directory where results and plots are generated (created automatically).
 *   `requirements.txt`: List of Python dependencies.
 *   `README.md`: Project documentation.
 
