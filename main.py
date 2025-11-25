@@ -1,6 +1,7 @@
 import argparse
 import logging
 import sys
+import os
 from typing import Optional
 import pandas as pd
 
@@ -28,6 +29,7 @@ class NoShowPredictionPipeline:
         self.X_test = None
         self.y_train = None
         self.y_test = None
+        self.output_dir = 'outputs'
         
         # Initialize components
         self.loader = DataLoader(filepath, url)
@@ -39,6 +41,9 @@ class NoShowPredictionPipeline:
 
     def run(self, visualize=False):
         """Executes the full pipeline."""
+        # Create output directory
+        os.makedirs(self.output_dir, exist_ok=True)
+
         # 1. Load Data
         self.df = self.loader.load_data()
         
@@ -50,7 +55,7 @@ class NoShowPredictionPipeline:
         
         # 4. Visualization (Optional)
         if visualize:
-            self.visualizer.visualize_data(self.df)
+            self.visualizer.visualize_data(self.df, self.output_dir)
         
         # 5. Preprocessing
         self.X_train, self.X_test, self.y_train, self.y_test = self.preprocessor.preprocess(self.df)
@@ -59,7 +64,7 @@ class NoShowPredictionPipeline:
         self.trainer.train_models(self.X_train, self.y_train)
         
         # 7. Evaluate Models
-        self.trainer.evaluate_models(self.X_test, self.y_test)
+        self.trainer.evaluate_models(self.X_test, self.y_test, self.output_dir)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="No-Show Prediction Pipeline")

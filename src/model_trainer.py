@@ -1,4 +1,5 @@
 import logging
+import os
 from typing import Dict, Any
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.tree import DecisionTreeClassifier
@@ -28,13 +29,30 @@ class ModelTrainer:
             model.fit(X_train, y_train)
             logger.info(f"{name} trained.")
 
-    def evaluate_models(self, X_test, y_test):
+    def evaluate_models(self, X_test, y_test, output_dir: str = '.'):
         """Evaluates trained models and prints reports."""
         logger.info("Evaluating models...")
         
-        for name, model in self.models.items():
-            print(f"\n{'='*20} {name} {'='*20}")
-            predictions = model.predict(X_test)
-            print(classification_report(y_test, predictions))
-            print("Confusion Matrix:")
-            print(confusion_matrix(y_test, predictions))
+        results_path = os.path.join(output_dir, 'model_results.txt')
+        
+        with open(results_path, 'w') as f:
+            for name, model in self.models.items():
+                header = f"\n{'='*20} {name} {'='*20}\n"
+                print(header)
+                f.write(header)
+                
+                predictions = model.predict(X_test)
+                
+                report = classification_report(y_test, predictions)
+                print(report)
+                f.write(report + "\n")
+                
+                cm_header = "Confusion Matrix:\n"
+                print(cm_header)
+                f.write(cm_header)
+                
+                cm = str(confusion_matrix(y_test, predictions))
+                print(cm)
+                f.write(cm + "\n")
+        
+        logger.info(f"Model evaluation results saved to {results_path}")

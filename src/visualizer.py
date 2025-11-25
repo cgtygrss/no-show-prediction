@@ -2,11 +2,12 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
 class Visualizer:
-    def visualize_data(self, df: pd.DataFrame):
+    def visualize_data(self, df: pd.DataFrame, output_dir: str = '.'):
         """Generates exploratory data analysis plots."""
         logger.info("Generating visualizations...")
         if df is None:
@@ -23,7 +24,7 @@ class Visualizer:
             plt.figure(figsize=(10, 6))
             sns.countplot(x=col, hue='NoShow', data=df)
             plt.title(f'{col} vs NoShow')
-            plt.savefig(f'{col}_vs_NoShow.png')
+            plt.savefig(os.path.join(output_dir, f'{col}_vs_NoShow.png'))
             plt.close()
             
-        logger.info("Visualizations saved as PNG files.")
+        logger.info(f"Visualizations saved as PNG files in {output_dir}.")

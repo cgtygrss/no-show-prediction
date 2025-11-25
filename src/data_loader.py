@@ -2,7 +2,6 @@ import pandas as pd
 import logging
 import sys
 import os
-import kaggle
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +15,7 @@ class DataLoader:
         if not os.path.exists(self.filepath) and self.url:
             logger.info(f"File not found at {self.filepath}. Attempting to download from {self.url}...")
             try:
+                import kaggle
                 # Extract dataset name from URL (e.g., joniarroba/noshowappointments)
                 if "kaggle.com/datasets/" in self.url:
                     dataset_name = self.url.split("kaggle.com/datasets/")[1]
